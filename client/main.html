@@ -1,0 +1,54 @@
+<head>
+  <title>platformViz</title>
+</head>
+
+<body>
+  <div class="flex-grid">
+    <div style="width: 50%" class="col">
+        <canvas id="lineChart"></canvas>
+    </div>
+
+    <div class="col">
+      <p>iterations</p>
+      <input type="number" value="10" min="1" max="500" id="iterationsField">
+
+      <p>inital Tutors</p>
+      <input type="number" min="0" max="" value="1000" id="tutorInitField">
+
+      <p>Percentage of tutors becoming inactive after one time interval</p>
+      <input type="range" min="0" max="100" value="10" id="tutorExitSlider" class="percentSlider">
+      <output for="tutorExitSlider" id="tutorExitOutput">10%</output>
+
+      <p>new tutors</p>
+      <input type="number" min="0" max="" value="10" id="tutorNewField">
+
+      <p>Percentage of tutors pulling new tutors</p>
+      <input type="range" min="0" max="100" value="3" id="tutorViralSlider" class="percentSlider">
+      <output for="tutorViralSlider" id="tutorViralOutput">3%</output>
+
+      <p id="rateDisplay">Rate</p>
+    </div>
+
+    <div class="col">
+      <p>inital students</p>
+      <input type="number" min="0" max="" value="100" id="studentInitField">
+
+      <p>Percentage of students becoming inactive after one time interval</p>
+      <input type="range" min="0" max="100" value="5" id="studentExitSlider" class="percentSlider">
+      <output for="studentExitSlider" id="studentExitOutput">5%</output>
+
+      <p>new students</p>
+      <input type="number" min="0" max="" value="10" id="studentNewField">
+
+      <p>Percentage of students pulling new students</p>
+      <input type="range" min="0" max="100" value="2" id="studentViralSlider" class="percentSlider">
+      <output for="studentViralSlider" id="studentViralOutput">2%</output>
+
+      <p>Percentage of students that also sign up as a tutor</p>
+      <input type="range" min="0" max="100" value="7" id="renegadeSlider" class="percentSlider">
+      <output for="renegadeSlider" id="renegadeOutput">7%</output>
+    </div>
+</div>
+</body>
+
+

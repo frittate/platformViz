@@ -1,0 +1,13 @@
+/* CSS declarations go here */
+.percentSlider {
+    width: 180px;
+}
+
+.flex-grid {
+    display: flex;
+}
+
+.col {
+    flex: 1;
+    padding-left: 20px;
+}
