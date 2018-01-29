@@ -82,6 +82,11 @@ Meteor.startup(() => {
       updateAll();
     }, false);
 
+    studentNewField.addEventListener("input", function() {
+      studentsNew = studentNewField.value;
+      updateAll();
+    }, false);
+
     studentExitSlider.addEventListener("input", function(){
       studentsExit = studentExitSlider.value;
       studentExitOutput.innerHTML = studentsExit + "%";
