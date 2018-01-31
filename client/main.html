@@ -4,7 +4,7 @@
 
 <body>
   <div class="flex-grid">
-    <div style="width: 50%" class="col">
+    <div style="width: 50%" class="chart">
         <canvas id="lineChart"></canvas>
     </div>
 
@@ -48,6 +48,11 @@
       <input type="range" min="0" max="100" value="7" id="renegadeSlider" class="percentSlider">
       <output for="renegadeSlider" id="renegadeOutput">7%</output>
     </div>
+</div>
+<div>
+  <button id="addConfig">Save Configuration</button>
+  <button id="clearAll">Clear All</button>
+  <ul id="currentConfig"></ul>
 </div>
 </body>
 

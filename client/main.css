@@ -11,3 +11,8 @@
     flex: 1;
     padding-left: 20px;
 }
+
+.chart {
+    flex: 2;
+}
+
