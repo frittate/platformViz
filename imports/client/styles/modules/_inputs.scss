@@ -1,0 +1,117 @@
+
+.box {
+    border: 1px solid $grey-light;
+    margin: 10px;
+}
+
+.box-tutors {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+}
+
+.box-students {
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+}
+
+.heading {
+    height: 50px;
+    font-size: 1.4rem;
+    color: $grey-dark;
+}
+
+.heading--tutors {
+    background: $orange;
+}
+
+.heading--students {
+    background: $blue;
+}
+
+.inputField {
+    margin: 4rem 1rem 0px 1rem;
+    position: relative;
+}
+
+.box-display .inputField{
+    margin: 1rem 1rem 0 1rem;
+    position: relative;
+}
+
+.inputField label{
+    display: inline-block;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: $grey-dark;
+    margin-bottom: 1rem;
+}
+
+input[type=number]{
+    width: 100%;
+    background: rgba(49, 44, 50, 0.05);
+    display: block;
+    height: 4rem;    
+    border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.inputField input {
+    color: rgba(104, 104, 105, 0.8);
+}
+
+.box-tutors svg{
+    margin-left: 1rem;
+    color: $orange;
+}
+
+.box-students svg{
+    margin-left: 1rem;
+    color: $blue;
+}
+
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    background:rgba(49, 44, 50, 0.15);
+    height: 3px;
+    border: none;
+    border-radius: 1px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.box-tutors input[type=range]::-webkit-slider-thumb {
+    background: $orange;
+}
+
+.box-students input[type=range]::-webkit-slider-thumb {
+    background: $blue;
+}
+
+.percentSlider{
+    width: 80%;
+    display: inline-block;
+}
+
+.input__tutors--range {
+    color: rgba(104, 104, 105, 0.8);
+    border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-left: 1rem;
+    float: right;
+}

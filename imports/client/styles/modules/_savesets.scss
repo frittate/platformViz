@@ -1,0 +1,14 @@
+.saveSets button {
+    background: transparent;
+    border: 0px;
+    display: inline-block;
+    height: 3.5rem;
+    width: 12rem;
+    color: darken($blue, 20%);
+
+    font-size: 1.6rem;
+    font-weight: normal;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
