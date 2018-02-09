@@ -1,59 +1,121 @@
 <head>
   <title>platformViz</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 
 <body>
-  <div class="flex-grid">
-    <div style="width: 50%" class="chart">
-        <canvas id="lineChart"></canvas>
+
+
+  <div class="container">
+    <header>
+      <h1>Platform Development Visualizer V0.2</h1>
+    </header>
+
+    <div class="chart">
+            <canvas id="lineChart"></canvas>
     </div>
 
-    <div class="col">
-      <p>iterations</p>
-      <input type="number" value="10" min="1" max="500" id="iterationsField">
+    <div class=" box box-tutors">
+      <div class="heading heading--tutors">
+          <h2>Tutors</h2>
+      </div>
 
-      <p>inital Tutors</p>
-      <input type="number" min="0" max="" value="1000" id="tutorInitField">
+      <div class="inputField">
+        <label for="tutorInitField">inital Tutors</label>
+        <i class="fas fa-user"></i>
+        <input type="number" min="0" max="" value="1000" id="tutorInitField">
+      </div>
 
-      <p>Percentage of tutors becoming inactive after one time interval</p>
-      <input type="range" min="0" max="100" value="10" id="tutorExitSlider" class="percentSlider">
-      <output for="tutorExitSlider" id="tutorExitOutput">10%</output>
+      <div class="inputField">
+          <label for="tutorNewField">new tutors</label>
+          <i class="fas fa-user-plus"></i>
+          <input type="number" min="0" max="" value="10" id="tutorNewField">
+      </div>
+    
+      <div class="inputField">
+        <label for="tutorExitSlider">Tutors exit</label>
+        <i class="fas fa-user-times"></i>
+        <input type="range" min="0" max="100" value="10" id="tutorExitSlider" class="percentSlider">
+        <output for="tutorExitSlider" id="tutorExitOutput" class="input__tutors--range">10%</output>
+      </div>
 
-      <p>new tutors</p>
-      <input type="number" min="0" max="" value="10" id="tutorNewField">
-
-      <p>Percentage of tutors pulling new tutors</p>
-      <input type="range" min="0" max="100" value="3" id="tutorViralSlider" class="percentSlider">
-      <output for="tutorViralSlider" id="tutorViralOutput">3%</output>
-
-      <p id="rateDisplay">Rate</p>
+      <div class="inputField">
+          <label for="tutorViralSlider">Tutors Virality</label>
+          <i class="fas fa-share-alt"></i>
+          <input type="range" min="0" max="100" value="3" id="tutorViralSlider" class="percentSlider">
+          <output for="tutorViralSlider" id="tutorViralOutput" class="input__tutors--range">3%</output>
+      </div>
     </div>
 
-    <div class="col">
-      <p>inital students</p>
-      <input type="number" min="0" max="" value="100" id="studentInitField">
+    <div class="box box-students">
+        <div class="heading heading--students">
+            <h2>Students</h2>
+        </div>
 
-      <p>Percentage of students becoming inactive after one time interval</p>
-      <input type="range" min="0" max="100" value="5" id="studentExitSlider" class="percentSlider">
-      <output for="studentExitSlider" id="studentExitOutput">5%</output>
+        <div class="inputField">
+            <label for="studentInitField">inital students</label>
+            <i class="fas fa-user"></i>
+            <input type="number" min="0" max="" value="100" id="studentInitField">
+        </div>
 
-      <p>new students</p>
-      <input type="number" min="0" max="" value="10" id="studentNewField">
+        <div class="inputField">
+            <label for="studentNewField">new students</label>
+            <i class="fas fa-user-plus"></i>
+            <input type="number" min="0" max="" value="10" id="studentNewField">
+        </div>
 
-      <p>Percentage of students pulling new students</p>
-      <input type="range" min="0" max="100" value="2" id="studentViralSlider" class="percentSlider">
-      <output for="studentViralSlider" id="studentViralOutput">2%</output>
+        <div class="inputField">
+            <label for="studentExitSlider">Students Exit</label>
+            <i class="fas fa-user-times"></i>
+            <input type="range" min="0" max="100" value="5" id="studentExitSlider" class="percentSlider">
+            <output for="studentExitSlider" id="studentExitOutput" class="input__tutors--range">5%</output>
+        </div>
 
-      <p>Percentage of students that also sign up as a tutor</p>
-      <input type="range" min="0" max="100" value="7" id="renegadeSlider" class="percentSlider">
-      <output for="renegadeSlider" id="renegadeOutput">7%</output>
+        <div class="inputField">
+            <label for="studentViralSlider">Students Virality</label>
+            <i class="fas fa-share-alt"></i>
+            <input type="range" min="0" max="100" value="2" id="studentViralSlider" class="percentSlider">
+            <output for="studentViralSlider" id="studentViralOutput" class="input__tutors--range">2%</output>
+        </div>
+     
+        <div class="inputField">
+            <label for="renegadeSlider">Students to teachers</label>
+            <i class="fas fa-random"></i>
+            <input type="range" min="0" max="100" value="7" id="renegadeSlider" class="percentSlider">
+            <output for="renegadeSlider" id="renegadeOutput" class="input__tutors--range">7%</output>
+        </div>
+
+
     </div>
-</div>
-<div>
-  <button id="addConfig">Save Configuration</button>
-  <button id="clearAll">Clear All</button>
-  <ul id="currentConfig"></ul>
-</div>
+
+    <div class="box box-display">
+      <div class="inputField">
+        <label for="iterationsField">Cycles/ Iterations</label>
+
+        <input type="number" value="10" min="1" max="500" id="iterationsField">
+      </div>
+    </div>
+
+    <div class="box rate-display">
+        <p>Ratio Tutors to Students</p>
+        <i class="fas fa-signal"></i>
+        <p id="rateDisplay">3.78</p>
+    </div>
+
+    <div class="box saveSets">
+      <!-- <div>
+          <button id="addSet">Save new</button>
+          <button id="clearAllSets">Delete all</button>
+      </div>
+      <div>
+        <ul id="savedSets">
+          <li>saved items here</li>
+        </ul>
+      </div> -->
+
+    </div>
+  </div>
 </body>
 
 
