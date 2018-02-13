@@ -87,9 +87,10 @@ h1, h2 {
 .savedSetsItems{
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
 
     div {
-        padding-left: 3rem;
+        
         min-width: 8rem;
     }
     h3 {
@@ -106,6 +107,14 @@ h1, h2 {
         margin-left: 2rem;
     }
 
+    .setname {
+        width: auto;
+    }
+
+    .sparkline {
+        width: 5rem;
+    }
+
     .students-icon{
         color: $blue;
         font-size: 1.8rem;
@@ -115,4 +124,5 @@ h1, h2 {
     font-size: 1.6rem;
     color: $grey-dark;
     font-weight: bold;
+    height: 4.5rem;
 }

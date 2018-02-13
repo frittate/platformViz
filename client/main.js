@@ -44,31 +44,36 @@ let model = {
 
   calculateIterations: function(){
       model.chartedData.intervals = Array.from(new Array(parseInt(model.inputData.iterations)),(val, index) => index +1);  
-      //console.log(model.chartedData.intervals);
-  },
-
-  calculateRate: function(){
-      let cTutors = this.chartedData.chartedTutors;
-      let cStudents = this.chartedData.chartedStudents;
-      this.chartedData.rate = cTutors[cTutors.length -1] / cStudents[cStudents.length - 1];
+      
   },
 
   calculateTutors: function(){
+      //debugger;
       let tutors = this.inputData.tutorsInit;
       for (i=0;i<this.inputData.iterations;i++) {
           tutors = tutors - (tutors * (this.inputData.tutorsExit / 100)) + this.inputData.tutorsNew + (this.inputData.studentsInit * (this.inputData.renegades / 100)) + (tutors * (this.inputData.tutorsViral / 100));            
           this.chartedData.chartedTutors[i] = parseInt(tutors).toFixed(2);
       }
-      //console.log(this.chartedData.chartedTutors);
+      this.chartedData.chartedTutors.splice(this.inputData.iterations, this.chartedData.chartedTutors.length);
+      
   },
 
   calculateStudents: function(){
       let students = this.inputData.studentsInit;
+      
       for (i=0;i<this.inputData.iterations;i++) {
           students = students - (students * (this.inputData.studentsExit / 100)) + this.inputData.studentsNew + (students * (this.inputData.studentsViral / 100));
           this.chartedData.chartedStudents[i] = parseInt(students).toFixed(2);
         }
-      //console.log(this.chartedData.chartedStudents);
+        this.chartedData.chartedStudents.splice(this.inputData.iterations, this.chartedData.chartedStudents.length);
+
+  },
+
+  calculateRate: function(){
+    
+    let cTutors = this.chartedData.chartedTutors;
+    let cStudents = this.chartedData.chartedStudents;
+    this.chartedData.rate = cTutors[cTutors.length -1] / cStudents[cStudents.length - 1];
   },
 
 };
@@ -119,10 +124,10 @@ let view = {
     }, 
 
     updateSets: function(sets){
-        //console.log(db.sets);
-        debugger;
+        
+        //debugger;
         if (sets.length == 0 || sets == undefined) {
-            this.outputs.savedSets.innerHTML = `<button id='loadAllSets'>Reload Sets</button>`;
+            this.outputs.savedSets.innerHTML = `<button class="btn" id='loadAllSets'>Reload Sets</button>`;
             document.getElementById('loadAllSets').addEventListener("click", function(){
                 view.loadAllSets();
             }, false);
@@ -164,22 +169,22 @@ let view = {
         html = "";
           for (i=0;i<sets.length;i++) {
             html += `<li key=${sets[i]._id} id=${sets[i]._id} class="savedSetsItems">
-                    <h3>Set #${i+1}</h3>
+                    <h3 class="setname">Set #${i+1}</h3>
                     <h3>${sets[i].date}</h3>
                     <div><i class="fas fa-user tutors-icon"></i> ${sets[i].tutorsInit}</div>
                     <div><i class="fas fa-user-plus tutors-icon"></i> ${sets[i].tutorsNew}</div>
-                    <div><i class="fas fa-user-times tutors-icon"></i> ${sets[i].tutorsExit}</div>
-                    <div><i class="fas fa-share-alt tutors-icon"></i> ${sets[i].tutorsViral}</div>
+                    <div><i class="fas fa-user-times tutors-icon"></i> ${sets[i].tutorsExit} %</div>
+                    <div><i class="fas fa-share-alt tutors-icon"></i> ${sets[i].tutorsViral} %</div>
 
-                    <div><span class="tutorsparkline">Loading...</span></div>
+                    <div class="sparkline"><span class="tutorsparkline">Loading...</span></div>
 
                     <div><i class="fas fa-user students-icon"></i> ${sets[i].studentsInit}</div>
                     <div><i class="fas fa-user-plus students-icon"></i> ${sets[i].studentsNew}</div>
-                    <div><i class="fas fa-user-times students-icon"></i> ${sets[i].studentsExit}</div>
-                    <div><i class="fas fa-share-alt students-icon"></i> ${sets[i].studentsViral}</div>
-                    <div><i class="fas fa-random students-icon"></i> ${sets[i].renegades}</div>
+                    <div><i class="fas fa-user-times students-icon"></i> ${sets[i].studentsExit} %</div>
+                    <div><i class="fas fa-share-alt students-icon"></i> ${sets[i].studentsViral} %</div>
+                    <div><i class="fas fa-random students-icon"></i> ${sets[i].renegades} %</div>
 
-                    <div><span class="studentsparkline">Loading...</span></div>
+                    <div class="sparkline"><span class="studentsparkline">Loading...</span></div>
 
                     <div><i class="fas fa-stopwatch students-icon"></i> ${sets[i].iterations}</div>
                     ${loadCurrentButton()}
@@ -216,6 +221,7 @@ let controller = {
 
     updateAll: function(){
       model.recalculate();
+      console.log(controller.chartConfig);
       view.updateDisplay();
     },
 
@@ -386,7 +392,7 @@ let controller = {
             return fullDate;
         }
 
-        debugger;
+        //debugger;
         let dbWrite = Object.assign(model.inputData, model.chartedData, insertSaveTime());
         Configuration.insert(
             dbWrite
@@ -420,7 +426,7 @@ let controller = {
 
         iS.renegadeSlider.value = model.inputData.renegades;
         document.getElementById('renegadeOutput').value = model.inputData.renegades + '%';
-
+       
         controller.updateAll();
     },
 
