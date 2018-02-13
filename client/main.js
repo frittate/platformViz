@@ -2,14 +2,17 @@ import {Meteor} from 'meteor/meteor';
 import {Tracker} from 'meteor/tracker';
 
 import {Mongo} from 'meteor/mongo';
+import {Configuration} from '../imports/api/configuration';
 
 import Chart from 'chart.js';
-
-//Configuration = new Mongo.Collection('configuration');
+//import sparkline from '../imports/api/jquery.sparkline';
 
 Meteor.startup(() => {
-  
 
+let db = {
+    sets: [],
+}
+  
 let model = {
   inputData: {
     tutors: 0,
@@ -41,7 +44,7 @@ let model = {
 
   calculateIterations: function(){
       model.chartedData.intervals = Array.from(new Array(parseInt(model.inputData.iterations)),(val, index) => index +1);  
-      console.log(model.chartedData.intervals);
+      //console.log(model.chartedData.intervals);
   },
 
   calculateRate: function(){
@@ -56,7 +59,7 @@ let model = {
           tutors = tutors - (tutors * (this.inputData.tutorsExit / 100)) + this.inputData.tutorsNew + (this.inputData.studentsInit * (this.inputData.renegades / 100)) + (tutors * (this.inputData.tutorsViral / 100));            
           this.chartedData.chartedTutors[i] = parseInt(tutors).toFixed(2);
       }
-      console.log(this.chartedData.chartedTutors);
+      //console.log(this.chartedData.chartedTutors);
   },
 
   calculateStudents: function(){
@@ -65,7 +68,7 @@ let model = {
           students = students - (students * (this.inputData.studentsExit / 100)) + this.inputData.studentsNew + (students * (this.inputData.studentsViral / 100));
           this.chartedData.chartedStudents[i] = parseInt(students).toFixed(2);
         }
-      console.log(this.chartedData.chartedStudents);
+      //console.log(this.chartedData.chartedStudents);
   },
 
 };
@@ -95,7 +98,7 @@ let view = {
         view.CHART.canvas.height = "90%";
         myLine = new Chart(view.CHART, controller.chartConfig);
         controller.chartConfig.data.labels = model.chartedData.intervals;
-        //this.updateSets(db.sets);
+        this.updateSets(db.sets);
     },
 
     updateSlider: function(field, value){
@@ -105,40 +108,88 @@ let view = {
     updateDisplay: function(){
       rateDisplay.innerHTML = model.chartedData.rate.toFixed(2);
       controller.chartConfig.data.labels = model.chartedData.intervals;
+      controller.chartConfig.options.title.text = `# of tutors and students after ${model.inputData.iterations} iterations.`;
       myLine.update();
     },
 
-  /*   updateSets: function(sets){
-        if (sets.length == 0 || sets.length == undefined) {
-            this.outputs.savedSets.innerHTML = '<li>currently empty</li>';
+    loadAllSets: function(){
+        db.sets = Configuration.find().fetch();
+        console.log(db.sets);
+        this.updateSets(db.sets);
+    }, 
+
+    updateSets: function(sets){
+        //console.log(db.sets);
+        debugger;
+        if (sets.length == 0 || sets == undefined) {
+            this.outputs.savedSets.innerHTML = `<button id='loadAllSets'>Reload Sets</button>`;
+            document.getElementById('loadAllSets').addEventListener("click", function(){
+                view.loadAllSets();
+            }, false);
         } else {
             this.outputs.savedSets.innerHTML = this.renderSets(sets);
+
+            let savedSetsList = document.getElementById('savedSets');
+            let savedSetsItems = savedSetsList.getElementsByTagName('li');
+
+            for(i=0;i<savedSetsItems.length;i++){
+                savedSetsItems[i].querySelector('#loadButton').addEventListener('click', function(){
+                    controller.loadSet(this.parentNode.id);
+                }, false);
+
+                savedSetsItems[i].querySelector('#deleteButton').addEventListener('click', function(){
+                    controller.deleteSet(this.parentNode.id);
+                });
+                $('li.savedSetsItems > div > .tutorsparkline').each(function(i){
+                    $(this).sparkline(sets[i].chartedTutors, controller.fields.sparkOptionsTutors);
+                });
+
+                $('li.savedSetsItems > div > .studentsparkline').each(function(i){
+                    $(this).sparkline(sets[i].chartedStudents, controller.fields.sparkOptionsStudents);
+                });
+            }
         }
     }, 
 
     renderSets: function(sets){
 
-        loadCurrentButton = (id) => {
-            return `<button id=${id} onClick=controller.loadSet(event)>Load</button>`
+        loadCurrentButton = () => {
+            return `<button id="loadButton" class="btn btn-primary">Load</button>`
         };
   
-        deleteCurrentButton = (id) => {
-            return `<button id=${id} onClick='deleteCurrent(event)'>Delete this</button>`
+        deleteCurrentButton = () => {
+            return `<button id="deleteButton" class="btn">Delete this</button>`
         };
 
         html = "";
           for (i=0;i<sets.length;i++) {
-            html += `<li key=${sets[i]._id}> 
-                    Tutors: ${sets[i].tutorsInit}, 
-                    TutorsExit: ${sets[i].tutorsExit},
-                    TutorsNew: ${sets[i].tutorsNew},
-                    TutorsViral: ${sets[i].tutorsViral}, 
-                    ${loadCurrentButton(sets[i]._id)}
-                    ${deleteCurrentButton(sets[i]._id)}
+            html += `<li key=${sets[i]._id} id=${sets[i]._id} class="savedSetsItems">
+                    <h3>Set #${i+1}</h3>
+                    <h3>${sets[i].date}</h3>
+                    <div><i class="fas fa-user tutors-icon"></i> ${sets[i].tutorsInit}</div>
+                    <div><i class="fas fa-user-plus tutors-icon"></i> ${sets[i].tutorsNew}</div>
+                    <div><i class="fas fa-user-times tutors-icon"></i> ${sets[i].tutorsExit}</div>
+                    <div><i class="fas fa-share-alt tutors-icon"></i> ${sets[i].tutorsViral}</div>
+
+                    <div><span class="tutorsparkline">Loading...</span></div>
+
+                    <div><i class="fas fa-user students-icon"></i> ${sets[i].studentsInit}</div>
+                    <div><i class="fas fa-user-plus students-icon"></i> ${sets[i].studentsNew}</div>
+                    <div><i class="fas fa-user-times students-icon"></i> ${sets[i].studentsExit}</div>
+                    <div><i class="fas fa-share-alt students-icon"></i> ${sets[i].studentsViral}</div>
+                    <div><i class="fas fa-random students-icon"></i> ${sets[i].renegades}</div>
+
+                    <div><span class="studentsparkline">Loading...</span></div>
+
+                    <div><i class="fas fa-stopwatch students-icon"></i> ${sets[i].iterations}</div>
+                    ${loadCurrentButton()}
+                    ${deleteCurrentButton()}
                     </li>`;
           }
           return html;
-    }, */
+    }, 
+
+    
    
 };
 
@@ -156,9 +207,9 @@ let controller = {
         this.fields.sliders.studentViralSlider = document.getElementById('studentViralSlider');
         this.fields.sliders.renegadeSlider = document.getElementById('renegadeSlider');
 
-       //this.fields.configurations.currentConfig = document.getElementById('currentConfig');
-        //this.fields.configurations.addSet = document.getElementById('addSet');
-       //this.fields .configurations.clearAllSets = document.getElementById('clearAllSets');
+        this.fields.configurations.currentConfig = document.getElementById('currentConfig');
+        this.fields.configurations.addSet = document.getElementById('addSet');
+        this.fields.configurations.clearAllSets = document.getElementById('clearAllSets');
                 
         model.chartedData.intervals = Array.from(new Array(parseInt(model.inputData.iterations)),(val, index) => index +1);
     },
@@ -169,7 +220,7 @@ let controller = {
     },
 
     addFieldListeners: function(){
-        console.log("add fields");
+        //console.log("add fields");
         iF = this.fields.inputFields;
 
         iF.tutorInitField.addEventListener("input", function(){
@@ -230,7 +281,7 @@ let controller = {
           controller.updateAll();
         }, false);
 
-       /*  iC = this.fields.configurations;
+      iC = this.fields.configurations;
 
         iC.addSet.addEventListener("click", function(){
             controller.saveSet();
@@ -238,7 +289,7 @@ let controller = {
 
         iC.clearAllSets.addEventListener("click", function(){
             controller.clearAllSets();
-        }) */
+        }) 
 
 
     },
@@ -276,7 +327,7 @@ let controller = {
               stepSize: 1,
               autoSkipPadding: 5,
             }
-          }]
+          }],
         },
         animation: {
           duration: 700,
@@ -299,45 +350,93 @@ let controller = {
             studentViralSlider: {},
             renegadeSlider: {},
         },
-        displays: {
-            rateDisplay: {},
-            tutorViralOutput: {},
-            studentExitOutput: {},
-            studentViralOutput: {},    
-            renegadeOutput: {},
-            
-        },
         configurations: {
             currentConfig: {},
             addSet: {},
             clearAllSets: {},
+        },
+        sparkOptionsStudents: {
+            type: 'line',
+            fillColor: '#98dafc',
+            minSpotColor: false,
+            maxSpotColor: false,
+            lineColor: '#98dafc',
+            width: '60px',
+            disableInteraction: true,
+        },
+        sparkOptionsTutors: {
+            type: 'line',
+            fillColor: '#daad86',
+            minSpotColor: false,
+            maxSpotColor: false,
+            lineColor: '#daad86',
+            width: '60px',
+            disableInteraction: true,
         }
+
     },
 
-/*     saveSet: function(){
+     saveSet: function(){
+
+        insertSaveTime = () => {
+            let d = new Date();
+            let fullDate = {
+               date: `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`
+            };
+            return fullDate;
+        }
+
         debugger;
+        let dbWrite = Object.assign(model.inputData, model.chartedData, insertSaveTime());
         Configuration.insert(
-            model.inputData
+            dbWrite
         );
-        console.log('after saving a new set');
-        db.sets = Configuration.find().fetch();
-        console.log(db.sets);
-        view.updateSets(db.sets);
+        view.loadAllSets();
     },
 
-    loadSet: function(event){
-        let loaded = Configuration.find({_id: event.target.id}).fetch();
-        model.inputData.tutorsInit = loaded[0].tutorsInit;
+    loadSet: function(id){
+        let loaded = Configuration.find({_id: id}).fetch();
+        model.inputData = loaded[0];
+        let iF = this.fields.inputFields;
+        let iS = this.fields.sliders;
+
+        iF.tutorInitField.value = model.inputData.tutorsInit;
+        iF.tutorNewField.value = model.inputData.tutorsNew;
+        iF.studentInitField.value = model.inputData.studentsInit;
+        iF.studentNewField.value = model.inputData.studentsNew;
+        iF.iterationsField.value = model.inputData.iterations;
+        
+        iS.tutorExitSlider.value = model.inputData.tutorsExit;
+        document.getElementById('tutorExitOutput').value = model.inputData.tutorsExit + '%';
+
+        iS.tutorViralSlider.value = model.inputData.tutorsViral;
+        document.getElementById('tutorViralOutput').value = model.inputData.tutorsViral + '%';
+
+        iS.studentExitSlider.value = model.inputData.studentsExit;
+        document.getElementById('studentExitOutput').value = model.inputData.studentsExit + '%';
+
+        iS.studentViralSlider.value = model.inputData.studentsViral;
+        document.getElementById('studentViralOutput').value = model.inputData.studentsViral + '%';
+
+        iS.renegadeSlider.value = model.inputData.renegades;
+        document.getElementById('renegadeOutput').value = model.inputData.renegades + '%';
+
         controller.updateAll();
+    },
+
+    deleteSet: function(id){
+        Configuration.remove({_id: id});
     },
 
     clearAllSets: function(){
         let r = confirm("Do you want to delete all sets?");
         if (r) {
             Meteor.call('clearDB');
-            view.updateSets();
+            location.reload(true);
+            view.updateSets(db.sets);
         }
-    }  */
+
+    }  
 };
 
     

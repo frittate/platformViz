@@ -23,7 +23,7 @@ html {
 
 .container{
     display: grid;
-    grid-template-rows: 7.4rem 70rem 12rem 12rem;
+    grid-template-rows: 7.4rem 70rem 12rem auto;
     grid-template-columns: 20% 40% 20% 20%;
 }
 
@@ -78,4 +78,41 @@ h1, h2 {
 .rate-display svg {
     color: rgba(49, 44, 50, 0.5);
     margin: 0 2rem 0 1rem;
+}
+
+.savedSets {
+    list-style: none;
+}
+
+.savedSetsItems{
+    display: flex;
+    justify-content: space-evenly;
+
+    div {
+        padding-left: 3rem;
+        min-width: 8rem;
+    }
+    h3 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-right: 1rem;
+        width: 12rem;
+    }
+
+    .tutors-icon{
+        color: $orange;
+        font-size: 1.8rem;
+        margin-left: 2rem;
+    }
+
+    .students-icon{
+        color: $blue;
+        font-size: 1.8rem;
+        margin-left: 2rem;
+    }
+
+    font-size: 1.6rem;
+    color: $grey-dark;
+    font-weight: bold;
 }

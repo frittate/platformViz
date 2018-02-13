@@ -9,6 +9,5 @@ Meteor.startup(() => {
 Meteor.methods({
   "clearDB": function(){
     Configuration.remove({});
-    console.log(Configuration.find().fetch());
   },
 });
