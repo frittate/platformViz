@@ -119,13 +119,11 @@ let view = {
 
     loadAllSets: function(){
         db.sets = Configuration.find().fetch();
-        console.log(db.sets);
         this.updateSets(db.sets);
     }, 
 
     updateSets: function(sets){
         
-        //debugger;
         if (sets.length == 0 || sets == undefined) {
             this.outputs.savedSets.innerHTML = `<button class="btn" id='loadAllSets'>Reload Sets</button>`;
             document.getElementById('loadAllSets').addEventListener("click", function(){
@@ -144,7 +142,8 @@ let view = {
 
                 savedSetsItems[i].querySelector('#deleteButton').addEventListener('click', function(){
                     controller.deleteSet(this.parentNode.id);
-                });
+                }, false);
+
                 $('li.savedSetsItems > div > .tutorsparkline').each(function(i){
                     $(this).sparkline(sets[i].chartedTutors, controller.fields.sparkOptionsTutors);
                 });
@@ -159,7 +158,7 @@ let view = {
     renderSets: function(sets){
 
         loadCurrentButton = () => {
-            return `<button id="loadButton" class="btn btn-primary">Load</button>`
+            return `<button id="loadButton" class="btn">Load</button>`
         };
   
         deleteCurrentButton = () => {
@@ -221,7 +220,6 @@ let controller = {
 
     updateAll: function(){
       model.recalculate();
-      console.log(controller.chartConfig);
       view.updateDisplay();
     },
 
@@ -392,7 +390,6 @@ let controller = {
             return fullDate;
         }
 
-        //debugger;
         let dbWrite = Object.assign(model.inputData, model.chartedData, insertSaveTime());
         Configuration.insert(
             dbWrite
@@ -432,6 +429,7 @@ let controller = {
 
     deleteSet: function(id){
         Configuration.remove({_id: id});
+        view.loadAllSets();
     },
 
     clearAllSets: function(){
